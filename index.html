@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Table</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        h1 {
+            color: #495057;
+            font-weight: bold;
+        }
+        .table-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            background-color: #ffffff;
+            font-size: 1.1rem;
+        }
+        table th {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+        }
+        table td {
+            vertical-align: middle;
+        }
+        table td a {
+            color: #007bff;
+            font-weight: 500;
+        }
+        table td a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        .dataTables_wrapper {
+            font-size: 1.1rem;
+        }
+        .description {
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .disclaimer {
+            background-color: #f8d7da;
+            border: 1px solid #f5c2c7;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        footer {
+            margin-top: 2rem;
+            padding: 1rem 0;
+            background-color: #ffffff;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Kerentanan (Sistem Informasi Pengumuman Kelulusan Online 1.0) Domain Analisis</h1>
+        
+        <div class="description">
+            
+            <p>"Halaman ini berisi data yang telah dianalisis mengenai Open Source Project (Sistem Informasi Pengumuman Kelulusan Online 1.0) yang berpotensi terdampak terkait kerentanan CSRF + BLIND XSS. Data telah diproses untuk menyertakan informasi geografis dan jaringan untuk tujuan riset."</p>
+                <H3>⚠️Tentang Kerentanan </h1>
+            <P>Sistem Informasi Pengumuman Kelulusan Online 1.0 adalah aplikasi web _open-source_ yang rentan terhadap CSRF dan Blind XSS. Kerentanan ini dapat dieksploitasi untuk melakukan tindakan yang tidak sah dan menyuntikkan skrip berbahaya yang dapat menyebabkan pelanggaran data atau kompromi akun pengguna.</P>
+        </div>
+
+        <div class="disclaimer">
+            <h4>⚠️ Disclaimer</h4>
+            <p>"Data ini disediakan hanya untuk tujuan riset keamanan pertahanan. Informasi ini telah diungkapkan secara publik dan dibagikan untuk membantu organisasi menilai paparan mereka dan mengambil langkah-langkah remediasi yang diperlukan. Saya tidak mendukung penggunaan data ini untuk tujuan jahat apa pun.
+            </p>
+                <P><b>Jika organisasi Anda terdampak, harap segera mengambil tindakan untuk:</b></P>
+                
+                <ul>SEGERA MIGRASI DAN HENTIKAN PENGGUNAAN PROJECT INI!</ul>
+                
+                <ul>  Lakukan security audit. </ul>
+                
+                    <ul>  Pantau aktivitas mencurigakan apa pun."</ul>
+        </div>
+
+        <div class="table-container">
+            <div class="table-responsive">
+                <table id="dataTable" class="table table-striped table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be dynamically generated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Developed by <a href="#" target="_blank">Your Name</a>. &copy; 2025</p>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- PapaParse JS for reading CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js"></script>
+
+    <script>
+        // Path to the CSV file
+        const csvFilePath = 'hasil_google_search.csv';
+
+        // Function to load and display CSV data
+        $(document).ready(function() {
+            Papa.parse(csvFilePath, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    const data = results.data;
+                    const tableBody = $('#dataTable tbody');
+
+                    // Populate table rows
+                    data.forEach(row => {
+                        if (row.Title && row.Link) { // Ensure the row has valid data
+                            tableBody.append(`
+                                <tr>
+                                    <td>${row.Title}</td>
+                                    <td><a href="${row.Link}" target="_blank">${row.Link}</a></td>
+                                </tr>
+                            `);
+                        }
+                    });
+
+                    // Initialize DataTables
+                    $('#dataTable').DataTable({
+                        paging: true,
+                        searching: true,
+                        info: true,
+                        responsive: true,
+                        language: {
+                            search: "Search:",
+                            paginate: {
+                                previous: "Prev",
+                                next: "Next"
+                            }
+                        },
+                        autoWidth: false,
+                        scrollX: true,
+                        columnDefs: [
+                            { targets: '_all', className: 'text-center' }
+                        ]
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
